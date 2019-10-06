@@ -7,6 +7,8 @@ import kmeans
 import visualization as vs
 import pca as mypca
 
+# from sklearn.cluster import KMeans
+
 def read(file_path):
     data = pd.read_csv(file_path,sep=r'\t', header=None, engine='python')
     ds =  data.iloc[:,2:]
@@ -39,14 +41,28 @@ def main():
     dataset, ground_truth = read("cho.txt")
     # dataset, ground_truth = read("iyer.txt")
 
-    # kmeans_res = kmeans.k_means(dataset, 3)
+    visualize(dataset, ground_truth, 'groundtruth')
+
+    # kmeans clustering
+    kmeans_res, kmeans_centroids = kmeans.k_means(dataset, 5)
+    print('kmeans_centroids: ', kmeans_centroids)
+    visualize(dataset, kmeans_res, 'kmeans')
     
-    # visualize(dataset, ground_truth, 'groundtruth')
-    # visualize(dataset, kmeans_res, 'kmeans')
+    kmeans_ix, kmeans_jaccard = validate(ground_truth, kmeans_res)
+    print('kmeans_rand_index: ', kmeans_ix)
+    print('kmeans_jaccard: ', kmeans_jaccard)
     
-    # ix, jaccard = validate(ground_truth, kmeans_res)
-    # print('rand_index: ', ix)
-    # print('jaccard: ', jaccard)
+    # compare kmeans to sklearn implementation
+    # sky_kmeans = KMeans(n_clusters=5)
+    # sky_kmeans_res = sky_kmeans.fit(dataset).predict(dataset)
+    # sky_kmeans_centroids = sky_kmeans.cluster_centers_
+    # print('sky_kmeans_centroids: ', sky_kmeans_centroids)
+    # sky_kmeans_labels = sky_kmeans.labels_
+    # visualize(dataset, sky_kmeans_labels, 'sky_kmeans')
+    
+    # sky_kmeans_ix, sky_kmeans_jaccard = validate(ground_truth, sky_kmeans_res)
+    # print('sky_kmeans_rand_index: ', sky_kmeans_ix)
+    # print('sky_kmeans_jaccard: ', sky_kmeans_jaccard)
 
 if __name__ == "__main__":
     main()
