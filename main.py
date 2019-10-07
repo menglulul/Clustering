@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import pandas as pd
-
 import kmeans
+import spectral
 import visualization as vs
 import pca as mypca
 
-# from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans
 
 def read(file_path):
     data = pd.read_csv(file_path,sep=r'\t', header=None, engine='python')
@@ -38,16 +38,20 @@ def visualize(dataset, labels, title):
     vs.visualization(pca_res, labels, title, 'PC')
 
 def main():
+
     dataset, ground_truth = read("cho.txt")
     # dataset, ground_truth = read("iyer.txt")
+
+    # to-do try out different k to report best parameter setting
+    k = 5
 
     visualize(dataset, ground_truth, 'groundtruth')
 
     # kmeans clustering
-    kmeans_res, kmeans_centroids = kmeans.k_means(dataset, 5)
+    kmeans_res, kmeans_centroids = kmeans.k_means(dataset, k)
     print('kmeans_centroids: ', kmeans_centroids)
     visualize(dataset, kmeans_res, 'kmeans')
-    
+
     kmeans_ix, kmeans_jaccard = validate(ground_truth, kmeans_res)
     print('kmeans_rand_index: ', kmeans_ix)
     print('kmeans_jaccard: ', kmeans_jaccard)
@@ -63,6 +67,15 @@ def main():
     # sky_kmeans_ix, sky_kmeans_jaccard = validate(ground_truth, sky_kmeans_res)
     # print('sky_kmeans_rand_index: ', sky_kmeans_ix)
     # print('sky_kmeans_jaccard: ', sky_kmeans_jaccard)
+
+    # spectral clustering
+    spec_res, spec_centroids = spectral.spectral_cluster(dataset, k)
+    print('spectral_centroids: ', spec_centroids)
+    visualize(dataset, spec_res, 'spectral')
+
+    spec_ix, spec_jaccard = validate(ground_truth, spec_res)
+    print('spectral_rand_index: ', spec_ix)
+    print('spectral_jaccard: ', spec_jaccard)
 
 if __name__ == "__main__":
     main()
