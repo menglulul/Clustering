@@ -69,7 +69,8 @@ def main():
     # print('sky_kmeans_jaccard: ', sky_kmeans_jaccard)
 
     # spectral clustering
-    spec_res, spec_centroids = spectral.spectral_cluster(dataset, k)
+    k_spectral = 7
+    spec_res, spec_centroids = spectral.spectral_cluster(dataset, k_spectral)
     print('spectral_centroids: ', spec_centroids)
     visualize(dataset, spec_res, 'spectral')
 

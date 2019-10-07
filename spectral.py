@@ -6,7 +6,7 @@ from sklearn.cluster import KMeans, SpectralClustering
 
 
 def gaussianKernel(a, b):
-    sigma = 1
+    sigma = 10
     euclidean = np.linalg.norm(a-b)
     res = math.exp(-0.5 * (euclidean ** 2) / (sigma ** 2 ) )
     return res
@@ -47,11 +47,14 @@ def laplacianEpsilon(df, epsilon):
 
 # get matrix of first k eigenvectors as columns
 def eigen(L, k):
-    W, vectors = np.linalg.eig(L)
-
+    values, vectors = np.linalg.eig(L)
+    idx = np.argsort(values)
+    values = values[idx]
+    vectors = vectors[:,idx]
     V = vectors[:, 0:k]
-
-    return W, V
+    print(values)
+    print(V)
+    return values, V
 
 def sklearnKmeans(V, k):
     kmeans = KMeans(n_clusters=k, init='random', random_state= 0 ).fit(V)
@@ -70,8 +73,8 @@ def sklearnSpectral(dataset, k):
 
 def spectral_cluster(dataset, k):
 
-    # D, A = laplacianFully(dataset)
-    D, A = laplacianEpsilon(dataset, 1.5)
+    D, A = laplacianFully(dataset)
+    #D, A = laplacianEpsilon(dataset, 1.5)
     L = np.subtract(D, A)
     # Lnorm = np.linalg.inv(D) * L
     print(A)
