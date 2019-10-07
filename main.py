@@ -6,6 +6,7 @@ import kmeans
 import spectral
 import visualization as vs
 import pca as mypca
+import GMM
 
 from sklearn.cluster import KMeans
 
@@ -76,6 +77,16 @@ def main():
     spec_ix, spec_jaccard = validate(ground_truth, spec_res)
     print('spectral_rand_index: ', spec_ix)
     print('spectral_jaccard: ', spec_jaccard)
-
+    
+    # GMM clustering
+    GMM_res, GMM_centroids = GMM.GMM_clustering(dataset,k)
+    print('GMM_centroids: ', GMM_centroids)
+    visualize(dataset, GMM_res, 'GMM')
+    
+    GMM_ix, GMM_jaccard = validate(ground_truth, GMM_res)
+    print('GMM_rand_index: ', GMM_ix)
+    print('GMM_jaccard: ', GMM_jaccard)
+    
+    
 if __name__ == "__main__":
     main()
