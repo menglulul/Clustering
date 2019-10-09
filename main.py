@@ -12,6 +12,9 @@ from sklearn.cluster import KMeans
 from sklearn.metrics.cluster import adjusted_rand_score
 from sklearn.metrics import jaccard_similarity_score
 
+from sklearn.cluster import DBSCAN
+import dbscan as my_dbscan
+
 def read(file_path):
     data = pd.read_csv(file_path,sep=r'\t', header=None, engine='python')
     ds =  data.iloc[:,2:]
@@ -97,6 +100,18 @@ def main():
     GMM_ix, GMM_jaccard = validate(ground_truth, GMM_res)
     print('GMM_rand_index: ', GMM_ix)
     print('GMM_jaccard: ', GMM_jaccard)
+    
+    #DBSCAN clustering
+    
+    #sklearn DBSCAN
+    db = DBSCAN(eps=1, min_samples=5).fit(dataset)
+    labels = db.labels_
+    visualize(dataset, labels, 'dbscan')
+    
+    #my DBSCAN
+    #parameters: dataset, eps, minpts
+    my_db = my_dbscan.DBSCAN(dataset, 1, 5)
+    visualize(dataset, my_db, 'my_dbscan')
 
     
 if __name__ == "__main__":
