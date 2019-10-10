@@ -112,6 +112,49 @@ def main():
     
     #DBSCAN clustering
     
+    #dbscan_clustering()
+    
+
+    
+def dbscan_clustering():
+    dataset, ground_truth = read("cho.txt")
+    visualize(dataset, ground_truth, 'groundtruth')
+    
+    file = open('dbscan_cho.csv', mode='w')
+    writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    best_rand_index = 0
+    for eps in np.arange(1,1.3,0.05):
+        for min_samples in range(2,16):
+            labels = my_dbscan.DBSCAN(dataset, eps, min_samples)
+            rand_index, jaccard = sklearnIndex(ground_truth, labels)
+            if rand_index>best_rand_index:
+                best_rand_index = rand_index
+                visualize(dataset, labels, 'dbscan')
+                print('eps',eps)
+                print('min_samples',min_samples)
+                print('rand_index',rand_index)
+                print('jaccard',jaccard)
+            writer.writerow([eps,min_samples,rand_index,jaccard])
+    
+    dataset, ground_truth = read("iyer.txt")
+    visualize(dataset, ground_truth, 'groundtruth')
+    
+    file = open('dbscan_iyer.csv', mode='w')
+    writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    best_rand_index = 0
+    for eps in np.arange(0.8,1.2,0.05):
+        for min_samples in range(2,12):
+            labels = my_dbscan.DBSCAN(dataset, eps, min_samples)
+            rand_index, jaccard = sklearnIndex(ground_truth, labels)
+            if rand_index>best_rand_index:
+                best_rand_index = rand_index
+                visualize(dataset, labels, 'dbscan')
+                print('eps',eps)
+                print('min_samples',min_samples)
+                print('rand_index',rand_index)
+                print('jaccard',jaccard)
+            writer.writerow([eps,min_samples,rand_index,jaccard])
+            
     #sklearn DBSCAN
     db = DBSCAN(eps=1, min_samples=5).fit(dataset)
     labels = db.labels_
@@ -121,7 +164,6 @@ def main():
     #parameters: dataset, eps, minpts
     my_db = my_dbscan.DBSCAN(dataset, 1, 5)
     visualize(dataset, my_db, 'my_dbscan')
-
     
 if __name__ == "__main__":
     main()
