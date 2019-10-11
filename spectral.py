@@ -2,13 +2,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 from sklearn.cluster import KMeans, SpectralClustering
-# import math
-
-# def gaussianKernel(a, b):
-#     sigma = 10
-#     euclidean = np.linalg.norm(a-b)
-#     res = math.exp(-0.5 * (euclidean ** 2) / (sigma ** 2 ) )
-#     return res
 
 def laplacianFully(df, k):
     num_rows = df.shape[0]
@@ -26,8 +19,7 @@ def laplacianFully(df, k):
     # get the d(si, sk) -- single row at row k of sorted W
     # (kth smallest dist in all rows/objects for each attribute)
     ksub = np.sort(W, axis=0)
-    ksub = ksub[k]
-    # print("ksub", ksub)
+    ksub = ksub[k]=
     # calculate sigma squared using matrix multiplication
     ksub = ksub[np.newaxis].T
     sigma_square = np.multiply(ksub, ksub.T)
@@ -67,8 +59,6 @@ def eigen(L, k):
     values = values[idx]
     vectors = vectors[:,idx]
     V = vectors[:, 0:k]
-    print(values)
-    print(V)
     return values, V
 
 def sklearnKmeans(V, k):
@@ -87,15 +77,8 @@ def sklearnSpectral(dataset, k):
 def spectral_cluster(dataset, k):
 
     D, A = laplacianFully(dataset, k)
-    #D, A = laplacianEpsilon(dataset, 1.5)
-
     L = np.subtract(D, A)
-    print(A)
-    print(D)
-    print(L)
-
     W, V = eigen(L, k)
     clusters, centroids = sklearnKmeans(V, k)
 
-    # clusters, centroids = sklearnSpectral(dataset, k)
     return clusters, centroids

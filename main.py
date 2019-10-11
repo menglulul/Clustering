@@ -9,7 +9,7 @@ import kmeans
 import hierarchical
 import spectral
 import GMM
-import dbscan as my_dbscan
+import dbscan
 import visualization as vs
 import pca as mypca
 
@@ -42,11 +42,12 @@ def main():
         visualize(dataset, kmeans_res, 'kmeans')
 
     # hierarchical agglomerative(single link)
-    for i in range(238, 239):
+    for i in range(20, 21):
         hac_min_res = hierarchical.hac(dataset, i, 'MIN')
         hac_min_ix = RandIndex(ground_truth, hac_min_res)
         print('hac_min: n_clusters = {}, RandIndex = {}'.format(i, hac_min_ix))
         visualize(dataset, hac_min_res, 'hac_min')
+    
     
     # hierarchical agglomerative(complete link)
     for i in range(5, 6):
@@ -54,6 +55,14 @@ def main():
         hac_max_ix = RandIndex(ground_truth, hac_max_res)
         print('hac_max: n_clusters = {}, RandIndex = {}'.format(i, hac_max_ix))
         visualize(dataset, hac_max_res, 'hac_max')
+
+    # DBSCAN
+    for eps in np.arange(1,1.1,0.1):
+         for min_samples in range(2,3):
+             DBSCAN_res = dbscan.DBSCAN(dataset, eps, min_samples)
+             DBSCAN_ix = RandIndex(ground_truth, DBSCAN_res)
+             print('DBSCAN: eps = {}, minPts = {}, RandIndex = {}'.format(eps, min_samples, DBSCAN_ix))
+             visualize(dataset, DBSCAN_res, 'DBSCAN')
 
     # spectral clustering
     for i in range(12, 13):
@@ -69,55 +78,7 @@ def main():
         print('GMM: k = {}, RandIndex = {}'.format(i, GMM_ix))
         visualize(dataset, GMM_res, 'GMM')
 
-    
-# def dbscan_clustering():
-#     dataset, ground_truth = read("cho.txt")
-#     visualize(dataset, ground_truth, 'groundtruth')
-    
-#     file = open('dbscan_cho.csv', mode='w')
-#     writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-#     best_rand_index = 0
-#     for eps in np.arange(1,1.3,0.05):
-#         for min_samples in range(2,16):
-#             labels = my_dbscan.DBSCAN(dataset, eps, min_samples)
-#             rand_index, jaccard = sklearnIndex(ground_truth, labels)
-#             if rand_index>best_rand_index:
-#                 best_rand_index = rand_index
-#                 visualize(dataset, labels, 'dbscan')
-#                 print('eps',eps)
-#                 print('min_samples',min_samples)
-#                 print('rand_index',rand_index)
-#                 print('jaccard',jaccard)
-#             writer.writerow([eps,min_samples,rand_index,jaccard])
-    
-#     dataset, ground_truth = read("iyer.txt")
-#     visualize(dataset, ground_truth, 'groundtruth')
-    
-#     file = open('dbscan_iyer.csv', mode='w')
-#     writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-#     best_rand_index = 0
-#     for eps in np.arange(0.8,1.2,0.05):
-#         for min_samples in range(2,12):
-#             labels = my_dbscan.DBSCAN(dataset, eps, min_samples)
-#             rand_index, jaccard = sklearnIndex(ground_truth, labels)
-#             if rand_index>best_rand_index:
-#                 best_rand_index = rand_index
-#                 visualize(dataset, labels, 'dbscan')
-#                 print('eps',eps)
-#                 print('min_samples',min_samples)
-#                 print('rand_index',rand_index)
-#                 print('jaccard',jaccard)
-#             writer.writerow([eps,min_samples,rand_index,jaccard])
-            
-#     #sklearn DBSCAN
-#     db = DBSCAN(eps=1, min_samples=5).fit(dataset)
-#     labels = db.labels_
-#     visualize(dataset, labels, 'dbscan')
-    
-#     #my DBSCAN
-#     #parameters: dataset, eps, minpts
-#     my_db = my_dbscan.DBSCAN(dataset, 1, 5)
-#     visualize(dataset, my_db, 'my_dbscan')
+
     
 if __name__ == "__main__":
     main()

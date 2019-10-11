@@ -66,9 +66,6 @@ def GMM_clustering(dataset,n_clusters,max_itr=1000):
     while(True):
         gamma = e_step(data,pi,mu,sigma,5)
         new_pi, new_mu, new_sigma = m_step(data,gamma,pi,mu,sigma,5)
-        #print(new_pi)
-        #print(new_mu)
-        #print(new_sigma)
         if itr > max_itr or ((new_pi-pi).all() and (new_mu-mu).all() and (new_sigma-sigma).all()):
             break
         else:
