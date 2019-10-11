@@ -5,8 +5,7 @@ import numpy as np
 
 def init(df, k):
     # return randomly selected k points with its range
-    range = df.shape[0]
-    ix = np.random.choice(range, size=k, replace=False)
+    ix = np.random.choice(df.shape[0], size=k, replace=False)
     centroids = df.iloc[ix,:].reset_index(drop=True)
     return centroids
 
@@ -38,12 +37,12 @@ def update(df, clusters):
 
 
 def k_means(dataset, k):
-    print('dataset:')
-    print(dataset)
+    # print('dataset:')
+    # print(dataset)
     centroids = init(dataset, k)
     clusters = []
-    print('initial centroids:')
-    print(centroids)
+    # print('initial centroids:')
+    # print(centroids)
     # assign points to clusters and update centroids
     # repeat until centroids no longer change
     while(True):
@@ -53,7 +52,7 @@ def k_means(dataset, k):
             break
         else:
             centroids = new_c
-            print(new_c)
+            # print(new_c)
     # format output
     clusters += 1
     clusters = clusters.astype(int)
